@@ -1,42 +1,44 @@
-# TensorFlow Lite Flutter Object Detection
+# Testing TFLite Flutter Plugin speed
 
-Object Detection app built using [TFLite Flutter Plugin](https://github.com/am15h/tflite_flutter_plugin)
-and [TFLite Flutter Helper Library](https://github.com/am15h/tflite_flutter_helper)
+Object Detection app built using [TFLite Flutter Plugin](https://github.com/am15h/tflite_flutter_plugin).
+
+It seems that newer versions are significantly slower than older ones. This repo can be used to test:
+
+* tflite_flutter versions 0.9.5 and 0.10.4
+* Flutter 3.13.9 and 3.16.9
 
 #### **Important**
+
+For tflite_flutter 0.9.5, following is needed:
 
 * execute `install.sh`(linux) or `install.bat`(windows) for downloading tflite binaries.
 More info [here](https://github.com/am15h/tflite_flutter_plugin#important-initial-setup).
 
-#### Environment
+## Test
+
+### Environment
 
 This was tested on the following environment:
 
-* Flutter
-  * Flutter 3.13.9, Dart 3.1.5 (last major, that is Fast)
-  * Flutter 3.16.9, Dart 3.2.6 (first major, that is Slow)
-* Java 11.0.12
-* Built on Windows 10
+* Built on Windows 10 with Java 11.0.12
 * Run  on Pixel 5 (Android 14)
 
-## Speed
+Just detected same blank(ish) camera image. Not too scientific (e.g. phone might heat up and give lower results), so few ms difference should not be taken too seriously, but the 7x or 16x difference is significant.
 
-Average time until settles (time in ms).
+### Results
 
-| Key             | Flutter 3.13 | Flutter 3.16 |
-|-----------------|--------------|--------------|
-| Inference       | 21 ms        | 357 ms       |
-| Pre-processing  | 16 ms        | 19  ms       |
-| Total predict   | 49 ms        | 387 ms       |
-| Total elapsed   | 64 ms        | 496 ms       |
+Average time until settles (times in ms).
 
-Without helper lib - hard to exactly compare as code differs so there might be minor changed in functionality.
-Overall, detection result seem to be the same. Overall speeds is also same. 
+| Test                                       | Inference | Pre-processing | Total predict | Total elapsed |
+|--------------------------------------------|-----------|----------------|---------------|---------------|
+| tflite_flutter: 0.9.5<br/>Flutter: 3.13.9  | 22        | 17             | 39            | 51            |
+| tflite_flutter: 0.9.5<br/>Flutter: 3.16.9  | 359       | 18             | 378           | 387           |
+| tflite_flutter: 0.10.4<br/>Flutter: 3.13.9 | 22        | 15             | 38            | 50            |
+| tflite_flutter: 0.10.4<br/>Flutter: 3.16.9 | 351       | 16             | 368           | 376           |
 
+### Conclusion
 
-| Key             | Flutter 3.13 | Flutter 3.16 |
-|-----------------|--------------|--------------|
-| Inference       | 26 ms        | 0 ms         |
-| Pre-processing  | 18 ms        | 0 ms         |
-| Total predict   | 45 ms        | 0 ms         |
-| Total elapsed   | 63 ms        | 0 ms         |
+* No difference between tflite_flutter 0.9.5 and 0.10.4
+* Big difference between Flutter 3.13.9 and Flutter 3.16.9 - 16x slower inference time and 7.5x slower total time.
+
+Flutter 3.19.3 seemed to be as slow as 3.16.9. So it seems that the problem is not yet fixed.
