@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:object_detection/tflite/recognition.dart';
 import 'package:object_detection/tflite/stats.dart';
@@ -15,16 +14,20 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   /// Results to draw bounding boxes
-  List<Recognition> results;
+  List<Recognition>? results;
 
   /// Realtime stats
-  Stats stats;
+  Stats? stats;
+  Stats totalStats = Stats(totalPredictTime: 0, inferenceTime: 0, preProcessingTime: 0, totalElapsedTime: 0, count: 0);
 
   /// Scaffold Key
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
+    final stats = this.stats;
+    final avg = totalStats.average;
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,
@@ -62,30 +65,45 @@ class _HomeViewState extends State<HomeView> {
               maxChildSize: 0.5,
               builder: (_, ScrollController scrollController) => Container(
                 width: double.maxFinite,
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BORDER_RADIUS_BOTTOM_SHEET),
+                decoration:
+                    BoxDecoration(color: Colors.white.withOpacity(0.9), borderRadius: BORDER_RADIUS_BOTTOM_SHEET),
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.keyboard_arrow_up,
-                            size: 48, color: Colors.orange),
+                        Icon(Icons.keyboard_arrow_up, size: 48, color: Colors.orange),
                         (stats != null)
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    StatsRow('Inference time:',
-                                        '${stats.inferenceTime} ms'),
-                                    StatsRow('Total prediction time:',
-                                        '${stats.totalElapsedTime} ms'),
-                                    StatsRow('Pre-processing time:',
-                                        '${stats.preProcessingTime} ms'),
-                                    StatsRow('Frame',
-                                        '${CameraViewSingleton.inputImageSize?.width} X ${CameraViewSingleton.inputImageSize?.height}'),
+                                    StatsRow(
+                                      'Inference time:',
+                                      '${stats.inferenceTime}ms (${avg.inferenceTime}ms)',
+                                    ),
+                                    StatsRow(
+                                      'Pre-processing time:',
+                                      '${stats.preProcessingTime}ms (${avg.preProcessingTime}ms)',
+                                    ),
+                                    StatsRow(
+                                      'Total predict time:',
+                                      '${stats.totalPredictTime}ms (${avg.totalPredictTime}ms)',
+                                    ),
+                                    StatsRow(
+                                      'Total elapsed time:',
+                                      '${stats.totalElapsedTime}ms (${avg.totalElapsedTime}ms)',
+                                    ),
+                                    StatsRow(
+                                      'Count:',
+                                      '${totalStats.count}',
+                                    ),
+                                    StatsRow(
+                                      'Frame',
+                                      '${CameraViewSingleton.inputImageSize?.width} X ${CameraViewSingleton.inputImageSize?.height}',
+                                    ),
+                                    OutlinedButton(onPressed: _reset, child: Text("Reset average"))
                                   ],
                                 ),
                               )
@@ -103,7 +121,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   /// Returns Stack of bounding boxes
-  Widget boundingBoxes(List<Recognition> results) {
+  Widget boundingBoxes(List<Recognition>? results) {
     if (results == null) {
       return Container();
     }
@@ -123,16 +141,23 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  _reset() {
+    setState(() {
+      totalStats = Stats(totalPredictTime: 0, inferenceTime: 0, preProcessingTime: 0, totalElapsedTime: 0, count: 0);
+    });
+  }
+
   /// Callback to get inference stats from [CameraView]
   void statsCallback(Stats stats) {
     setState(() {
       this.stats = stats;
+      this.totalStats += stats;
     });
   }
 
   static const BOTTOM_SHEET_RADIUS = Radius.circular(24.0);
-  static const BORDER_RADIUS_BOTTOM_SHEET = BorderRadius.only(
-      topLeft: BOTTOM_SHEET_RADIUS, topRight: BOTTOM_SHEET_RADIUS);
+  static const BORDER_RADIUS_BOTTOM_SHEET =
+      BorderRadius.only(topLeft: BOTTOM_SHEET_RADIUS, topRight: BOTTOM_SHEET_RADIUS);
 }
 
 /// Row for one Stats field

@@ -8,10 +8,14 @@ and [TFLite Flutter Helper Library](https://github.com/am15h/tflite_flutter_help
 * execute `install.sh`(linux) or `install.bat`(windows) for downloading tflite binaries.
 More info [here](https://github.com/am15h/tflite_flutter_plugin#important-initial-setup).
 
-## Demo 
+## Speed
 
-![DEMO](object_detection_demo.gif)
+Average time after 1000 predictions (time in ms).
 
-<i>Shot on Pixel 4</i>
+| Key             | Value |
+|-----------------|-------|
+| Inference       | 21    |
+| Pre-processing  | 18    |
+| Total predict   | 50    |
+| Total elapsed   | 65    |
 
-<b>The pre-built APK can be found [here](https://drive.google.com/file/d/1QRdq28doFegBL8x7daaZ5ivwXDjslfkg/view?usp=sharing).</b>

@@ -20,7 +20,7 @@ class Recognition {
   /// passed for inference
   Rect _location;
 
-  Recognition(this._id, this._label, this._score, [this._location]);
+  Recognition(this._id, this._label, this._score, this._location);
 
   int get id => _id;
 
@@ -44,13 +44,10 @@ class Recognition {
 
     double transLeft = max(0.1, location.left * ratioX);
     double transTop = max(0.1, location.top * ratioY);
-    double transWidth = min(
-        location.width * ratioX, CameraViewSingleton.actualPreviewSize.width);
-    double transHeight = min(
-        location.height * ratioY, CameraViewSingleton.actualPreviewSize.height);
+    double transWidth = min(location.width * ratioX, CameraViewSingleton.actualPreviewSize.width);
+    double transHeight = min(location.height * ratioY, CameraViewSingleton.actualPreviewSize.height);
 
-    Rect transformedRect =
-        Rect.fromLTWH(transLeft, transTop, transWidth, transHeight);
+    Rect transformedRect = Rect.fromLTWH(transLeft, transTop, transWidth, transHeight);
     return transformedRect;
   }
 
