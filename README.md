@@ -25,8 +25,8 @@ Average time until settles (time in ms).
 
 | Key             | Flutter 3.13 | Flutter 3.16 |
 |-----------------|--------------|--------------|
-| Inference       | 23 ms        | 365 ms       |
-| Pre-processing  | 7 ms         | 18  ms       |
-| Total predict   | 51 ms        | 393 ms       |
-| Total elapsed   | 66 ms        | 401 ms       |
+| Inference       | 21 ms        | 357 ms       |
+| Pre-processing  | 16 ms        | 19  ms       |
+| Total predict   | 49 ms        | 387 ms       |
+| Total elapsed   | 64 ms        | 496 ms       |
 
