@@ -26,12 +26,6 @@ class Classifier {
   /// Padding the image to transform into square
   int padSize = INPUT_SIZE;
 
-  /// Shapes of output tensors
-  List<List<int>> _outputShapes = [];
-
-  /// Types of output tensors
-  List<TfLiteType> _outputTypes = [];
-
   /// Number of results to show
   static const int NUM_RESULTS = 10;
 
@@ -46,19 +40,15 @@ class Classifier {
   /// Loads interpreter from asset
   void loadModel({Interpreter? interpreter}) async {
     try {
-      _interpreter = interpreter ??
-          await Interpreter.fromAsset(
-            MODEL_FILE_NAME,
-            options: InterpreterOptions()..threads = 4,
-          );
-
-      var outputTensors = _interpreter!.getOutputTensors();
-      _outputShapes = [];
-      _outputTypes = [];
-      outputTensors.forEach((tensor) {
-        _outputShapes.add(tensor.shape);
-        _outputTypes.add(tensor.type);
-      });
+      if (interpreter == null) {
+        final file = await rootBundle.load('assets/$MODEL_FILE_NAME');
+        _interpreter = Interpreter.fromBuffer(
+          file.buffer.asUint8List(),
+          options: InterpreterOptions()..threads = 4,
+        );
+      } else {
+        _interpreter = interpreter;
+      }
     } catch (e) {
       print("Error while creating interpreter: $e");
     }
@@ -131,7 +121,7 @@ class Classifier {
     final scores = outputScores.first as List<double>;
 
     // Number of detections
-    final numberOfDetectionsRaw = numLocations.first as double;
+    final numberOfDetectionsRaw = numLocations.first;
     final numberOfDetections = numberOfDetectionsRaw.toInt();
 
     // Using labelOffset = 1 as ??? at index 0
