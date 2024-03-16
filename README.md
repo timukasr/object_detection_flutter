@@ -30,3 +30,13 @@ Average time until settles (time in ms).
 | Total predict   | 49 ms        | 387 ms       |
 | Total elapsed   | 64 ms        | 496 ms       |
 
+Without helper lib - hard to exactly compare as code differs so there might be minor changed in functionality.
+Overall, detection result seem to be the same. Overall speeds is also same. 
+
+
+| Key             | Flutter 3.13 | Flutter 3.16 |
+|-----------------|--------------|--------------|
+| Inference       | 26 ms        | 0 ms         |
+| Pre-processing  | 18 ms        | 0 ms         |
+| Total predict   | 45 ms        | 0 ms         |
+| Total elapsed   | 63 ms        | 0 ms         |
