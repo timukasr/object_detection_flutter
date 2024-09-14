@@ -41,4 +41,4 @@ Average time until settles (times in ms).
 * No difference between tflite_flutter 0.9.5 and 0.10.4
 * Big difference between Flutter 3.13.9 and Flutter 3.16.9 - 16x slower inference time and 7.5x slower total time.
 
-Flutter 3.19.3 seemed to be as slow as 3.16.9. So it seems that the problem is not yet fixed.
+Flutter 3.24.2 seemed to be as slow as 3.16.9. So it seems that the problem is not yet fixed.
